@@ -205,3 +205,10 @@ If you encounter issues with the MCP implementation, try the following:
 1. Check your MCP library version: `pip show mcp`
 2. Check for error messages in the terminal
 3. Ensure you have the necessary permissions to run the MCP client
+
+## Authors
+
+This project was created and is maintained by:
+
+- [Florent Lacroute](https://github.com/FlorentLa)
+- [Frederic Visticot](https://github.com/fvisticot)
