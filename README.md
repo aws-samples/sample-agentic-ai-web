@@ -206,6 +206,10 @@ If you encounter issues with the MCP implementation, try the following:
 2. Check for error messages in the terminal
 3. Ensure you have the necessary permissions to run the MCP client
 
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ## Authors
 
 This project was created and is maintained by:

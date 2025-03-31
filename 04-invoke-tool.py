@@ -6,6 +6,21 @@ import uuid
 MODEL_ID = "us.amazon.nova-lite-v1:0"
 INITIAL_PROMPT = "Navigate to AWS homepage and take a screenshot. Do the same for Anthropic homepage"
 
+RED = '\033[31m'
+GREEN = '\033[32m'
+BLUE = '\033[34m'
+
+RESET = '\033[0m'
+
+def print_user(s: str):
+    print(BLUE + s + RESET)
+
+def print_assistant(s: str):
+    print(RED + s + RESET)
+
+def print_system(s: str):
+    print(GREEN + s + RESET)
+
 def filter_empty_text_content(message):
     if not message or 'content' not in message:
         return message
@@ -54,12 +69,12 @@ web_tools = [
 ]
 
 async def navigate(url):
-    print(f"Navigating to: {url}")
+    print_system(f"Navigating to: {url}")
     return {"title": "fake title"}
 
 async def take_screenshot():
     filename = f"screenshot_{uuid.uuid4()}.png"
-    print(f"Taking screenshot: {filename}")    
+    print_system(f"Taking screenshot: {filename}")    
     return {"filename": filename}
 
 async def run_example():
@@ -72,8 +87,8 @@ async def run_example():
     }]
     nb_request = 1
     # Send to model
-    print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
-    print(f"User prompt: {messages[0]['content'][0]['text']}")
+    print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+    print_user(f"User prompt: {messages[0]['content'][0]['text']}")
     response = bedrock_client.converse(
         modelId=MODEL_ID,
         messages=messages,
@@ -86,7 +101,7 @@ async def run_example():
     messages.append(output_message)
     stop_reason = response.get('stopReason')
 
-    print(f"Model response {json.dumps(output_message, indent=2)}")
+    print_assistant(f"Model response {json.dumps(output_message, indent=2)}")
     
     # Process tool requests - simplified loop
     while stop_reason == 'tool_use':
@@ -135,20 +150,20 @@ async def run_example():
             messages=messages,
             toolConfig={"tools": web_tools}
         )
-        print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+        print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
 
         output_message = response.get('output', {}).get('message', {})
         output_message = filter_empty_text_content(output_message)
         messages.append(output_message)
         stop_reason = response.get('stopReason')
         
-        print(f"Model response {json.dumps(output_message, indent=2)}")
+        print_assistant(f"Model response {json.dumps(output_message, indent=2)}")
 
                         
-    print("Task completed")
+    print_system("Task completed")
 
 # Main entry point
 if __name__ == "__main__":
-    print("AWS Bedrock Web Tools Minimal Example")
-    print("------------------------------------")
+    print_system("AWS Bedrock Web Tools Minimal Example")
+    print_system("------------------------------------")
     asyncio.run(run_example())

@@ -8,6 +8,22 @@ MODEL_ID = "us.anthropic.claude-3-5-haiku-20241022-v1:0"
 INITIAL_PROMPT = "Navigate to AWS french homepage and take a screenshot. Do the same for Anthropic homepage."
 SESSION_ID = str(uuid.uuid4())
 
+
+RED = '\033[31m'
+GREEN = '\033[32m'
+BLUE = '\033[34m'
+
+RESET = '\033[0m'
+
+def print_user(s: str):
+    print(BLUE + s + RESET)
+
+def print_assistant(s: str):
+    print(RED + s + RESET)
+
+def print_system(s: str):
+    print(GREEN + s + RESET)
+
 def filter_empty_text_content(message):
     if not message or 'content' not in message:
         return message
@@ -56,7 +72,7 @@ web_tools = [
 ]
 
 async def navigate(page, url):
-    print(f"Navigating to: {url}")
+    print_system(f"Navigating to: {url}")
     await page.goto(url, wait_until='networkidle')
     # Wait a bit more to ensure page is stable
     await asyncio.sleep(1)
@@ -64,7 +80,7 @@ async def navigate(page, url):
 
 async def take_screenshot(page):
     filename = f"screenshot/{SESSION_ID}/screenshot_{uuid.uuid4()}.png"
-    print(f"Taking screenshot: {filename}")
+    print_system(f"Taking screenshot: {filename}")
     await page.screenshot(path=filename)
     
     # Return the filename for later use
@@ -78,7 +94,7 @@ async def get_page_info(page):
         url = page.url
         return {"title": title, "url": url}
     except Exception as e:
-        print(f"Error getting page info: {str(e)}")
+        print_system(f"Error getting page info: {str(e)}")
         return {"title": "Unknown", "url": "Unknown"}
 async def run_example():
     # Initialize browser - minimal setup
@@ -96,8 +112,8 @@ async def run_example():
         }]
         nb_request = 1
         # Send to model
-        print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
-        print(f"User prompt: {messages[0]['content'][0]['text']}")
+        print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+        print_user(f"User prompt: {messages[0]['content'][0]['text']}")
         response = bedrock_client.converse(
             modelId=MODEL_ID,
             messages=messages,
@@ -110,7 +126,7 @@ async def run_example():
         messages.append(output_message)
         stop_reason = response.get('stopReason')
 
-        print(f"Model response {json.dumps(output_message, indent=2)}")
+        print_assistant(f"Model response {json.dumps(output_message, indent=2)}")
         
         # Process tool requests - simplified loop
         while stop_reason == 'tool_use':
@@ -146,7 +162,7 @@ async def run_example():
             # Browser context content - safely get page info
             page_info = await get_page_info(page)
             browser_content = {"text": f"Current page: Title: '{page_info['title']}', URL: '{page_info['url']}'"}
-            print(f"Browser context: {json.dumps(browser_content, indent=2)}")
+            print_system(f"Browser context: {json.dumps(browser_content, indent=2)}")
             
             # Add browser context to message
             tool_content.append(browser_content)
@@ -167,17 +183,17 @@ async def run_example():
                 messages=messages,
                 toolConfig={"tools": web_tools}
             )
-            print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+            print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
 
             output_message = response.get('output', {}).get('message', {})
             output_message = filter_empty_text_content(output_message)
             messages.append(output_message)
             stop_reason = response.get('stopReason')
             
-            print(f"Model response {json.dumps(output_message, indent=2)}")
+            print_assistant(f"Model response {json.dumps(output_message, indent=2)}")
 
                             
-        print("Task completed")
+        print_system("Task completed")
     
     finally:
         # Clean up
@@ -186,6 +202,6 @@ async def run_example():
 
 # Main entry point
 if __name__ == "__main__":
-    print("AWS Bedrock Web Tools Minimal Example")
-    print("------------------------------------")
+    print_system("AWS Bedrock Web Tools Minimal Example")
+    print_system("------------------------------------")
     asyncio.run(run_example())

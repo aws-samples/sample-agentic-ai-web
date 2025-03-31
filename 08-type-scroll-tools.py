@@ -19,6 +19,21 @@ SESSION_ID = str(uuid.uuid4())
 # Create screenshot directory if it doesn't exist
 os.makedirs(f"screenshot/{SESSION_ID}", exist_ok=True)
 
+RED = '\033[31m'
+GREEN = '\033[32m'
+BLUE = '\033[34m'
+
+RESET = '\033[0m'
+
+def print_user(s: str):
+    print(BLUE + s + RESET)
+
+def print_assistant(s: str):
+    print(RED + s + RESET)
+
+def print_system(s: str):
+    print(GREEN + s + RESET)
+
 def filter_empty_text_content(message):
     if not message or 'content' not in message:
         return message
@@ -151,15 +166,15 @@ web_tools = [
 ]
 
 async def navigate(page, url):
-    print(f"Navigating to: {url}")
-    await page.goto(url, wait_until='networkidle')
+    print_system(f"Navigating to: {url}")
+    await page.goto(url, wait_until='domcontentloaded')
     # Wait a bit more to ensure page is stable
     await asyncio.sleep(1)
     return {"title": await page.title()}
 
 async def take_screenshot(page):
     filename = f"screenshot/{SESSION_ID}/screenshot_{uuid.uuid4()}.png"
-    print(f"Taking screenshot: {filename}")
+    print_system(f"Taking screenshot: {filename}")
     await page.screenshot(path=filename)
     
     # Return the filename for later use
@@ -168,14 +183,14 @@ async def take_screenshot(page):
     }
 
 async def click(page, x, y):
-    print(f"Clicking at coordinates: ({x}, {y})")
+    print_system(f"Clicking at coordinates: ({x}, {y})")
     await page.mouse.click(x, y)
     # Wait a bit for any navigation or page changes to stabilize
     await asyncio.sleep(1)
     return {"clicked_at": {"x": x, "y": y}}
 
 async def scroll(page, direction, amount=500):
-    print(f"Scrolling {direction} by {amount} pixels")
+    print_system(f"Scrolling {direction} by {amount} pixels")
     if direction.lower() == "down":
         await page.evaluate(f"window.scrollBy(0, {amount})")
     elif direction.lower() == "up":
@@ -188,26 +203,26 @@ async def scroll(page, direction, amount=500):
     return {"scrolled": True, "direction": direction, "amount": amount}
 
 async def type_text(page, text, submit=False):
-    print(f"Typing text: '{text}'")
+    print_system(f"Typing text: '{text}'")
     try:
         await page.keyboard.type(text)
         
         if submit:
-            print("Pressing Enter to submit")
+            print_system("Pressing Enter to submit")
             await page.keyboard.press('Enter')
             return {"typed": True, "text": text, "submitted": True}
         
         return {"typed": True, "text": text, "submitted": False}
     except Exception as e:
-        print(f"Error typing text: {str(e)}")
+        print_system(f"Error typing text: {str(e)}")
         return {"typed": False, "error": str(e)}
 
 async def ask_user(question):
-    print("\n" + "-" * 50)
-    print(f"QUESTION: {question}")
-    print("-" * 50)
-    user_response = input("Your answer: ")
-    print("-" * 50 + "\n")
+    print_system("\n" + "-" * 50)
+    print_system(f"QUESTION: {question}")
+    print_system("-" * 50)
+    user_response = input(BLUE + "Your answer: " + RESET)
+    print_system("-" * 50 + "\n")
     return {"response": user_response}
 
 async def get_page_info(page):
@@ -216,9 +231,8 @@ async def get_page_info(page):
         url = page.url
         return {"title": title, "url": url}
     except Exception as e:
-        print(f"Error getting page info: {str(e)}")
+        print_system(f"Error getting page info: {str(e)}")
         return {"title": "Unknown", "url": "Unknown"}
-
 async def run_example():
     # Initialize browser - minimal setup
     playwright = await async_playwright().start()
@@ -235,11 +249,11 @@ async def run_example():
         }]
         nb_request = 1
         # Send to model
-        print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
-        print(f"User prompt: {messages[0]['content'][0]['text']}")
+        print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+        print_user(f"User prompt: {messages[0]['content'][0]['text']}")
         response = bedrock_client.converse(
             modelId=MODEL_ID,
-            system=[{"text":SYSTEM_PROMPT}],
+            system=[{"text": SYSTEM_PROMPT}],
             messages=messages,
             toolConfig={"tools": web_tools}
         )
@@ -250,7 +264,7 @@ async def run_example():
         messages.append(output_message)
         stop_reason = response.get('stopReason')
 
-        print(f"Model response {json.dumps(output_message, indent=2)}")
+        print_assistant(f"Model response {json.dumps(output_message, indent=2)}")
         
         # Process tool requests - simplified loop
         while stop_reason == 'tool_use':
@@ -340,6 +354,8 @@ async def run_example():
                     elif tool_name == 'ask_user':
                         question = tool_input.get('question', 'What would you like to do next?')
                         result = await ask_user(question)
+                    
+                    # concatenate tool content that will be sent back to the model
                         tool_content.append({
                             "toolResult": {
                                 "toolUseId": tool_id,
@@ -350,7 +366,7 @@ async def run_example():
             # Browser context content - safely get page info
             page_info = await get_page_info(page)
             browser_content = {"text": f"Current page: Title: '{page_info['title']}', URL: '{page_info['url']}'"}
-            print(f"Browser context: {json.dumps(browser_content, indent=2)}")
+            print_system(f"Browser context: {json.dumps(browser_content, indent=2)}")
             
             # Add browser context to message
             tool_content.append(browser_content)
@@ -372,17 +388,17 @@ async def run_example():
                 messages=messages,
                 toolConfig={"tools": web_tools}
             )
-            print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+            print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
 
             output_message = response.get('output', {}).get('message', {})
             output_message = filter_empty_text_content(output_message)
             messages.append(output_message)
             stop_reason = response.get('stopReason')
             
-            print(f"Model response {json.dumps(output_message, indent=2)}")
+            print_assistant(f"Model response {json.dumps(output_message, indent=2)}")
 
                             
-        print("Task completed")
+        print_system("Task completed")
     
     finally:
         # Clean up
@@ -391,6 +407,6 @@ async def run_example():
 
 # Main entry point
 if __name__ == "__main__":
-    print("AWS Bedrock Web Tools Minimal Example")
-    print("------------------------------------")
+    print_system("AWS Bedrock Web Tools Minimal Example")
+    print_system("------------------------------------")
     asyncio.run(run_example())

@@ -29,6 +29,20 @@ Think step by step and take screenshots between each step to ensure you are doin
 MODEL_ID = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
 #MODEL_ID = "us.anthropic.claude-3-5-haiku-20241022-v1:0"
 
+RED = '\033[31m'
+GREEN = '\033[32m'
+BLUE = '\033[34m'
+
+RESET = '\033[0m'
+
+def print_user(s: str):
+    print(BLUE + s + RESET)
+
+def print_assistant(s: str):
+    print(RED + s + RESET)
+
+def print_system(s: str):
+    print(GREEN + s + RESET)
 
 # List to track artifact URIs
 artifact_uris : List[AnyUrl] = []
@@ -62,16 +76,16 @@ async def handle_model_response(response: Dict[str, Any]) -> None:
     if "content" in response:
         for content_item in response.get("content", []):
             if "text" in content_item:
-                print(f"Model: {content_item['text']}")
+                print_assistant(f"Model: {content_item['text']}")
             elif "toolUse" in content_item:
                 tool = content_item["toolUse"]
-                print(f"Model wants to use tool: {tool['name']}")
-                print(f"  with parameters: {json.dumps(tool.get('input', {}), indent=2)}")
+                print_assistant(f"Model wants to use tool: {tool['name']}")
+                print_assistant(f"  with parameters: {json.dumps(tool.get('input', {}), indent=2)}")
 
 # Define a function to handle tool results
 async def handle_tool_result(result: Dict[str, Any]) -> None:
     """Process and display tool results"""
-    print(f"Tool result: {result}")
+    print_system(f"Tool result: {result}")
 
 # Generic function to process tool requests
 async def process_tool_request(session: ClientSession, tool_name: str, tool_id: str, tool_input: Dict[str, Any]) -> Dict:
@@ -87,7 +101,7 @@ async def process_tool_request(session: ClientSession, tool_name: str, tool_id: 
         A formatted tool result for Bedrock based on the content types in the result
         (handles TextContent, ImageContent, and EmbeddedResource)
     """
-    print(f"Processing tool request: {tool_name} with ID {tool_id}")
+    print_system(f"Processing tool request: {tool_name} with ID {tool_id}")
     
     try:
         # Call the tool with the provided input
@@ -125,7 +139,7 @@ async def process_tool_request(session: ClientSession, tool_name: str, tool_id: 
                         if hasattr(resource, 'uri'):
                             bedrock_content.append({"json": {"resource": resource.uri.unicode_string()}})
                             artifact_uris.append(resource.uri)
-                            print(f"Tracked artifact URI: {resource.uri}")                            
+                            print_system(f"Tracked artifact URI: {resource.uri}")                            
                         if hasattr(resource, 'text'):
                             bedrock_content.append({"json": {"resource": resource.text}})
 
@@ -180,8 +194,8 @@ def convert_to_bedrock_tools(mcp_tools : ListToolsResult):
 
 # Main function to run the client
 async def run_client():
-    print("Starting Web Automation MCP Client with Bedrock Integration")
-    print("--------------------------------------------------------")
+    print_system("Starting Web Automation MCP Client with Bedrock Integration")
+    print_system("--------------------------------------------------------")
     
     try:
         # Connect to the MCP server
@@ -193,14 +207,14 @@ async def run_client():
                 
                 # List available tools from MCP server
                 mcp_tools = await session.list_tools()
-                print(f"Available MCP tools: {[tool.name for tool in mcp_tools.tools]}")
+                print_system(f"Available MCP tools: {[tool.name for tool in mcp_tools.tools]}")
                 
                 # Set up AWS Bedrock client
                 bedrock_client = boto3.client('bedrock-runtime')
                 
                 # Dynamically convert MCP tools to Bedrock format
                 bedrock_tools = convert_to_bedrock_tools(mcp_tools)
-                print(f"Converted {len(bedrock_tools)} tools to Bedrock format")
+                print_system(f"Converted {len(bedrock_tools)} tools to Bedrock format")
                 
                 # Initialize conversation with the model
                 messages = [{
@@ -208,14 +222,14 @@ async def run_client():
                     "content": [{"text": INITIAL_PROMPT}]
                 }]
                 
-                print("\nStarting conversation with model...")
-                print(f"User: {INITIAL_PROMPT}")
+                print_system("\nStarting conversation with model...")
+                print_user(f"User: {INITIAL_PROMPT}")
                 
                 # Request counter
                 nb_request = 1
                 
                 # Send initial request to model
-                print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+                print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
                 response = bedrock_client.converse(
                     modelId=MODEL_ID,
                     system=[{"text": SYSTEM_PROMPT}],
@@ -229,7 +243,7 @@ async def run_client():
                 messages.append(output_message)
                 stop_reason = response.get('stopReason')
                 
-                print(f"Model response: {json.dumps(output_message, indent=2)}")
+                print_assistant(f"Model response: {json.dumps(output_message, indent=2)}")
                 
                 # Process tool requests in a loop
                 while stop_reason == 'tool_use':
@@ -246,8 +260,8 @@ async def run_client():
                             if isinstance(tool_input, str):
                                 tool_input = json.loads(tool_input)
                             
-                            print(f"\nExecuting tool: {tool_name}")
-                            print(f"Tool input: {json.dumps(tool_input, indent=2)}")
+                            print_assistant(f"\nExecuting tool: {tool_name}")
+                            print_assistant(f"Tool input: {json.dumps(tool_input, indent=2)}")
                             
                             # Process the tool request using our generic function
                             result_content = await process_tool_request(session, tool_name, tool_id, tool_input)
@@ -267,7 +281,7 @@ async def run_client():
                         page_info_text = "Page info not available"
                     
                     browser_content = {"text": f"Current page: {page_info_text}"}
-                    print(f"Browser context: {json.dumps(browser_content, indent=2)}")
+                    print_system(f"Browser context: {json.dumps(browser_content, indent=2)}")
                     
                     # Add browser context to message
                     tool_content.append(browser_content)                    
@@ -281,7 +295,7 @@ async def run_client():
                     
                     nb_request += 1
                     # Continue conversation
-                    print(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
+                    print_system(f"Sending request {nb_request} to Bedrock with {len(messages)} messages...")
                     response = bedrock_client.converse(
                         modelId=MODEL_ID,
                         system=[{"text": SYSTEM_PROMPT}],
@@ -294,11 +308,11 @@ async def run_client():
                     messages.append(output_message)
                     stop_reason = response.get('stopReason')
                     
-                    print(f"Model response: {json.dumps(output_message, indent=2)}")
+                    print_assistant(f"Model response: {json.dumps(output_message, indent=2)}")
                 
                 # Download all artifacts at the end of the task
                 if artifact_uris:
-                    print("\nDownloading artifacts...")
+                    print_system("\nDownloading artifacts...")
                     for uri in artifact_uris:
                         try:
                             # Extract session_id and filename from URI
@@ -323,28 +337,28 @@ async def run_client():
                                             with open(download_path, 'w', encoding="utf-8") as f:
                                                 f.write(text)
                                             
-                                            print(f"Downloaded artifact: {uri} to {download_path}")
+                                            print_system(f"Downloaded artifact: {uri} to {download_path}")
                                 else:
-                                    print(f"Failed to download artifact: {uri} - No content returned")
+                                    print_system(f"Failed to download artifact: {uri} - No content returned")
                             else:
-                                print(f"Failed to parse artifact URI: {uri}")
+                                print_system(f"Failed to parse artifact URI: {uri}")
                         except Exception as e:
-                            print(f"Error downloading artifact {uri}: {str(e)}")
+                            print_system(f"Error downloading artifact {uri}: {str(e)}")
                     
-                    print(f"\nAll artifacts downloaded to the 'downloads' directory")
+                    print_system(f"\nAll artifacts downloaded to the 'downloads' directory")
                 
-                print("\nTask completed")
+                print_system("\nTask completed")
     except Exception as e:
-        print(f"Error: {str(e)}")
+        print_system(f"Error: {str(e)}")
         traceback.print_exc()
-        print("Try running the server first with: python 10-mcp-server.py")
-        print("Make sure you have AWS credentials configured for Bedrock access")
+        print_system("Try running the server first with: python 10-mcp-server.py")
+        print_system("Make sure you have AWS credentials configured for Bedrock access")
 
 # Run the client when this script is executed directly
 if __name__ == "__main__":
     # Create directories for screenshots, artifacts, and downloads
     os.makedirs("downloads", exist_ok=True)
     
-    print("AWS Bedrock Web Tools with MCP Integration")
-    print("------------------------------------------")
+    print_system("AWS Bedrock Web Tools with MCP Integration")
+    print_system("------------------------------------------")
     asyncio.run(run_client())

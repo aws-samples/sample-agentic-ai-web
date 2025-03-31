@@ -1,26 +1,40 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to our project. Whether it's a bug report, new feature, correction, or additional
-documentation, we greatly value feedback and contributions from our community.
+Thank you for your interest in contributing to our project. Whether it's a bug report, new feature, correction, or additional documentation, we greatly value feedback and contributions from our community.
 
-Please read through this document before submitting any issues or pull requests to ensure we have all the necessary
-information to effectively respond to your bug report or contribution.
+Please read through this document before submitting any issues or pull requests to ensure we have all the necessary information to effectively respond to your bug report or contribution.
 
+## Folder Structure and Naming Convention
+
+### Folders
+- Use lowercase letters to avoid case-sensitivity issues across different operating systems.
+- Use hyphens (-) to separate words (kebab-case), which is generally preferred for repository names on GitHub.
+- Be descriptive but concise: The name should clearly indicate the repo's content without being too long.
+- Avoid special characters: Stick to alphanumeric characters and hyphens.
+
+### Python Scripts
+- Use hyphens (-) to separate words in filenames for improved readability.
+- Include a number prefix for ordering to maintain a logical sequence of scripts.
+- Be descriptive: Each filename should clearly indicate the content of the script.
+
+Examples of good script naming:
+- 01-no-tools.py
+- 02-tool-definition.py
+- 03-loop.py
 
 ## Reporting Bugs/Feature Requests
 
 We welcome you to use the GitHub issue tracker to report bugs or suggest features.
 
-When filing an issue, please check existing open, or recently closed, issues to make sure somebody else hasn't already
-reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
+When filing an issue, please check existing open, or recently closed, issues to make sure somebody else hasn't already reported the issue. Please try to include as much information as you can. Details like these are incredibly useful:
 
 * A reproducible test case or series of steps
 * The version of our code being used
 * Any modifications you've made relevant to the bug
 * Anything unusual about your environment or deployment
 
-
 ## Contributing via Pull Requests
+
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:
 
 1. You are working against the latest source on the *main* branch.
@@ -39,20 +53,29 @@ To send us a pull request, please:
 GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
-
 ## Finding contributions to work on
+
 Looking at the existing issues is a great way to find something to contribute on. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.
 
+## Contribution Suggestions
+
+Here are some ideas for contributions that would be particularly helpful for this project:
+
+1. **Additional Examples**: Create additional examples that demonstrate other capabilities or use cases.
+2. **Improved Documentation**: Enhance existing documentation with more examples, clarifications, or step-by-step guides.
+3. **Tests**: Add unit or integration tests for existing functionality.
+4. **Optimizations**: Improve performance or reduce resource usage.
+5. **New Features**: Implement new features that extend the project's capabilities.
 
 ## Code of Conduct
+
 This project has adopted the [Amazon Open Source Code of Conduct](https://aws.github.io/code-of-conduct).
 For more information see the [Code of Conduct FAQ](https://aws.github.io/code-of-conduct-faq) or contact
 opensource-codeofconduct@amazon.com with any additional questions or comments.
 
-
 ## Security issue notifications
-If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](http://aws.amazon.com/security/vulnerability-reporting/). Please do **not** create a public github issue.
 
+If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](http://aws.amazon.com/security/vulnerability-reporting/). Please do **not** create a public GitHub issue.
 
 ## Licensing
 
