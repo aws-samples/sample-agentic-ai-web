@@ -4,48 +4,37 @@ This project demonstrates how to use AWS Bedrock with Anthropic Claude and Amazo
 
 ## Setup Instructions
 
-```bash
-# Create and activate a virtual environment
-python3.12 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Install Playwright's Chromium browser
-playwright install chromium
-```
 
 ## Project Overview
 
 This project contains a series of progressive examples that demonstrate different capabilities:
 
 ### Step 1: Basic Setup (No Tools)
-`01-no-tools.py` - A minimal example that sends a request to Claude via AWS Bedrock without any tools.
+`01-no-tools` - A minimal example that sends a request to Claude via AWS Bedrock without any tools.
 
 ### Step 2: Tool Definition
-`02-tool-definition.py` - Introduces tool definitions for web navigation and screenshots.
+`02-tool-definition` - Introduces tool definitions for web navigation and screenshots.
 
 ### Step 3: Tool Loop
-`03-loop.py` - Implements a loop to handle tool requests with simulated responses.
+`03-loop` - Implements a loop to handle tool requests with simulated responses.
 
 ### Step 4: Tool Invocation
-`04-invoke-tool.py` - Adds actual tool implementation functions for navigation and screenshots.
+`04-invoke-tool` - Adds actual tool implementation functions for navigation and screenshots.
 
 ### Step 5: Headless Browser
-`05-headless-browser.py` - Integrates Playwright to control a real headless browser.
+`05-headless-browser` - Integrates Playwright to control a real headless browser.
 
 ### Step 6: Human-in-the-Loop
-`06-human-in-loop.py` - Adds a tool that allows the model to ask the user questions during execution.
+`06-human-in-loop` - Adds a tool that allows the model to ask the user questions during execution.
 
 ### Step 7: Vision Capabilities
-`07-vision.py` - Enhances the system with vision capabilities, allowing the model to:
+`07-vision` - Enhances the system with vision capabilities, allowing the model to:
 - See screenshots it takes
 - Analyze visual content
 - Click on specific elements based on visual analysis
 
 ### Step 8: Text Input with Form Submission
-`08-type-scroll-tools.py` - Adds text input and scrolling tools that enable the model to:
+`08-type-scroll-tools` - Adds text input and scrolling tools that enable the model to:
 - First click on elements like form fields using vision
 - Then type text into the last clicked element
 - Submit forms by pressing Enter after typing (optional)
@@ -53,7 +42,7 @@ This project contains a series of progressive examples that demonstrate differen
 - Demonstrates a complete e-commerce search workflow
 
 ### Step 9: File Writing
-`09-write-file.py` - Adds a file writing tool that enables the model to:
+`09-write-file` - Adds a file writing tool that enables the model to:
 - Search for information on the web
 - Scroll through search results to find relevant information
 - Compile and organize the findings
@@ -61,7 +50,7 @@ This project contains a series of progressive examples that demonstrate differen
 - Create permanent documentation of web search results
 
 ### Step 10: MCP Refactoring
-`10-mcp-client.py` - Refactors the application to use the Model Context Protocol:
+`10-mcp-client` - Refactors the application to use the Model Context Protocol:
 - Separates the application into client and server components
 - Uses FastMCP framework for structured tool definitions
 - Implements proper resource lifecycle management with lifespan API
@@ -71,7 +60,7 @@ This project contains a series of progressive examples that demonstrate differen
 - Automatically starts the MCP server (`10-mcp-server.py`)
 
 ### Step 11: Conversation History Management
-`11-mcp-client.py` - Adds conversation history management features:
+`11-mcp-client` - Adds conversation history management features:
 - Implements media content removal to reduce token usage
 - Adds conversation summarization for long interactions
 - Uses a smaller model (Amazon Nova Micro) for efficient summarization
@@ -94,61 +83,6 @@ The components overview includes:
 - Architecture evolution across steps
 
 This diagram helps visualize the progression from a simple API call to a sophisticated web automation assistant with multiple capabilities.
-
-## Usage
-
-### Running Steps with the Helper Script
-
-The project includes a helper script `run_step.sh` that makes it easy to run any step with colored JSON output:
-
-```bash
-# Make the script executable
-chmod +x run_step.sh
-
-# Show available steps
-./run_step.sh
-
-# Run a specific step with colored output
-./run_step.sh 1  # Run step 1 (01-no-tools.py)
-./run_step.sh 8  # Run step 8 (08-type-scroll-tools.py)
-./run_step.sh 9  # Run step 9 (09-write-file.py)
-
-# Run without colored output
-./run_step.sh 4 --no-color
-```
-
-The script automatically:
-- Discovers available steps based on file naming pattern
-- Formats JSON output with syntax highlighting using pygmentize
-- Detects interactive scripts and ensures they can receive user input
-- Installs pygmentize if it's not already available
-- Provides helpful usage information
-
-### Running Steps Manually
-
-Each step can also be run directly:
-
-```bash
-# Activate the virtual environment if not already activated
-source .venv/bin/activate
-
-# Run a specific step
-python 01-no-tools.py
-python 02-tool-definition.py
-python 03-loop.py
-python 04-invoke-tool.py
-python 05-headless-browser.py
-python 06-human-in-loop.py
-python 07-vision.py
-python 08-type-scroll-tools.py
-python 09-write-file.py
-
-# For step 10 (MCP version)
-python 10-mcp-client.py  # This will automatically start the MCP server
-
-# For step 11 (Conversation Management)
-python 11-mcp-client.py  # This will automatically start the MCP server
-```
 
 ## Key Features
 
@@ -198,14 +132,6 @@ This example assumes you have:
 - The `run_step.sh` script is designed to be extensible - it will automatically discover new step files as they are added
 - Interactive scripts (those that ask for user input) are detected automatically and run in a way that preserves input functionality
 
-## Troubleshooting MCP
-
-If you encounter issues with the MCP implementation, try the following:
-
-1. Check your MCP library version: `pip show mcp`
-2. Check for error messages in the terminal
-3. Ensure you have the necessary permissions to run the MCP client
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -216,3 +142,4 @@ This project was created and is maintained by:
 
 - [Florent Lacroute](https://github.com/FlorentLa)
 - [Frederic Visticot](https://github.com/fvisticot)
+- [Olivier Leplus](https://github.com/tagazok)

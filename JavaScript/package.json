@@ -1,0 +1,16 @@
+{
+  "name": "sample-agentic-ai-web-js",
+  "version": "1.0.0",
+  "description": "Sample Node.js application for Amazon Bedrock",
+  "main": "bedrock-example.js",
+  "scripts": {
+    "start": "node bedrock-example.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.515.0",
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "chalk": "^5.4.1",
+    "playwright": "^1.51.1",
+    "zod": "^3.24.2"
+  }
+}
