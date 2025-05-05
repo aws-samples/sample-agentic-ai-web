@@ -161,7 +161,7 @@ async function run() {
             }
 
             // Browser context content - safely get page info
-            const pageInfo = getPageInfo(page);
+            const pageInfo = await getPageInfo(page);
             const browserContent = { text: `Current page: Title: '${pageInfo['title']}', URL: '${pageInfo['url']}'` };
             printSystem(`Browser context: ${browserContent}`);
 
