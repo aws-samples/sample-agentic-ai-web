@@ -119,7 +119,7 @@ server.tool("writeFile",
         filename: z.string(),
         content: z.string()
     },
-    async ({ url }) => {
+    async ({ filename, content }) => {
         try {
             fs.writeFileSync(`artefacts/${sessionId}/${filename}`, content, 'utf8');
             return { content: [{ type: "text", text: filename }] }
