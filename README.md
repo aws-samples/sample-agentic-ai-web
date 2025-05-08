@@ -1,6 +1,6 @@
-# AWS Bedrock Web Tools Example
+# Amazon Bedrock Web Tools Example
 
-This project demonstrates how to use AWS Bedrock with Anthropic Claude and Amazon Nova models to create a web automation assistant with tool use, human-in-the-loop interaction, and vision capabilities.
+This project demonstrates how to use Amazon Bedrock with Anthropic Claude and Amazon Nova models to create a web automation assistant with tool use, human-in-the-loop interaction, and vision capabilities.
 
 ## Setup Instructions
 
@@ -10,7 +10,7 @@ This project demonstrates how to use AWS Bedrock with Anthropic Claude and Amazo
 This project contains a series of progressive examples that demonstrate different capabilities:
 
 ### Step 1: Basic Setup (No Tools)
-`01-no-tools` - A minimal example that sends a request to Claude via AWS Bedrock without any tools.
+`01-no-tools` - A minimal example that sends a request to Claude via Amazon Bedrock without any tools.
 
 ### Step 2: Tool Definition
 `02-tool-definition` - Introduces tool definitions for web navigation and screenshots.
@@ -97,11 +97,11 @@ This diagram helps visualize the progression from a simple API call to a sophist
 9. **MCP Architecture**: Client-server architecture with standardized protocol (Step 10)
 10. **Conversation Management**: Efficient token usage through media removal and conversation summarization (Step 11)
 
-## AWS Bedrock Configuration
+## Amazon Bedrock Configuration
 
 This example assumes you have:
 1. AWS CLI configured with appropriate credentials
-2. Access to Claude 3 models through AWS Bedrock
+2. Access to Claude 3 models through Amazon Bedrock
 3. Appropriate permissions to use the Bedrock API
 
 ## Example Workflow

@@ -26,7 +26,7 @@ After completing your search, use the write_file tool to save your findings in m
 Think step by step and take screenshots between each step to ensure you are doing what you think you are doing.
 """
 
-# AWS Bedrock model ID
+# Amazon Bedrock model ID
 MODEL_ID = "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
 # Model ID for summarization (using a smaller model for efficiency)
 SUMMARY_MODEL_ID = "us.amazon.nova-micro-v1:0"#"us.anthropic.claude-3-5-haiku-20241022-v1:0"
@@ -132,7 +132,7 @@ async def summarize_conversation(messages: List[Dict[str, Any]], bedrock_client)
     
     Args:
         messages: List of conversation messages
-        bedrock_client: AWS Bedrock client for calling the summarization model
+        bedrock_client: Amazon Bedrock client for calling the summarization model
         
     Returns:
         List of messages with middle part summarized
@@ -444,7 +444,7 @@ async def run_client():
                 mcp_tools = await session.list_tools()
                 print(f"Available MCP tools: {[tool.name for tool in mcp_tools.tools]}")
                 
-                # Set up AWS Bedrock client
+                # Set up Amazon Bedrock client
                 bedrock_client = boto3.client('bedrock-runtime')
                 
                 # Dynamically convert MCP tools to Bedrock format
@@ -609,6 +609,6 @@ if __name__ == "__main__":
     # Create directories for screenshots, artifacts, and downloads
     os.makedirs("downloads", exist_ok=True)
     
-    print("AWS Bedrock Web Tools with MCP Integration")
-    print("------------------------------------------")
+    print("Amazon Bedrock Web Tools with MCP Integration")
+    print("---------------------------------------------")
     asyncio.run(run_client())

@@ -1,6 +1,6 @@
 # Support
 
-This document outlines the support resources available for the AWS Bedrock Web Tools Example project.
+This document outlines the support resources available for the Amazon Bedrock Web Tools Example project.
 
 ## Getting Help
 
@@ -38,10 +38,10 @@ This project is maintained by AWS and the community. While we strive to be respo
 
 ## Professional Support
 
-For professional support with AWS Bedrock or other AWS services, please refer to:
+For professional support with Amazon Bedrock or other AWS services, please refer to:
 
 - [AWS Support](https://aws.amazon.com/support/)
-- [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 - [AWS Developer Forums](https://forums.aws.amazon.com/)
 
 ## Contributing

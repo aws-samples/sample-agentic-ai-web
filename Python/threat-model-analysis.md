@@ -1,16 +1,16 @@
-# AWS Bedrock Web Tools - Threat Model Analysis
+# Amazon Bedrock Web Tools - Threat Model Analysis
 
 ## Introduction
 
 ### Purpose
 
-This project demonstrates how to use AWS Bedrock with Anthropic Claude and Amazon Nova models to create a web automation assistant with tool use, human-in-the-loop interaction, and vision capabilities. The primary purpose is educational, allowing developers to understand how to integrate advanced language models with web automation capabilities.
+This project demonstrates how to use Amazon Bedrock with Anthropic Claude and Amazon Nova models to create a web automation assistant with tool use, human-in-the-loop interaction, and vision capabilities. The primary purpose is educational, allowing developers to understand how to integrate advanced language models with web automation capabilities.
 
 ### Project/Asset Overview
 
-The project is a series of progressive examples that demonstrate different web automation capabilities using AWS Bedrock. The major components include:
+The project is a series of progressive examples that demonstrate different web automation capabilities using Amazon Bedrock. The major components include:
 
-1. **AWS Bedrock Client**: Uses the Bedrock API to communicate with Claude and Nova models
+1. **Amazon Bedrock Client**: Uses the Bedrock API to communicate with Claude and Nova models
 2. **Playwright Browser**: Controls a headless Chromium browser for web automation
 3. **Web Interaction Tools**: Navigation, screenshots, clicking, text input, scrolling
 4. **File Management**: Writing results to markdown files
@@ -35,7 +35,7 @@ The project is built and deployed as a series of Python scripts that can be run 
 
 ### References
 
-- [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 - [Playwright Documentation](https://playwright.dev/python/docs/intro)
 - [Model Context Protocol](https://github.com/anthropics/anthropic-mcp)
 
@@ -46,7 +46,7 @@ The project is built and deployed as a series of Python scripts that can be run 
 ```mermaid
 flowchart TB
     subgraph "AWS Cloud"
-        Bedrock["AWS Bedrock\nClaude/Nova Models"]
+        Bedrock["Amazon Bedrock\nClaude/Nova Models"]
     end
     
     subgraph "Local Environment"
@@ -65,7 +65,7 @@ flowchart TB
     User["User"] <--> Client
 ```
 
-The architecture consists of a Python client that communicates with AWS Bedrock models (Claude and Nova) using the boto3 library. The client also interacts with an MCP (Model Context Protocol) server that controls a headless browser using Playwright. The browser can navigate websites, take screenshots, and interact with web elements. Results and screenshots are saved to the local file system.
+The architecture consists of a Python client that communicates with Amazon Bedrock models (Claude and Nova) using the boto3 library. The client also interacts with an MCP (Model Context Protocol) server that controls a headless browser using Playwright. The browser can navigate websites, take screenshots, and interact with web elements. Results and screenshots are saved to the local file system.
 
 ### Data Flow Diagrams
 
@@ -73,7 +73,7 @@ The architecture consists of a Python client that communicates with AWS Bedrock 
 sequenceDiagram
     participant User
     participant Client as Python Client
-    participant Bedrock as AWS Bedrock
+    participant Bedrock as Amazon Bedrock
     participant MCP as MCP Server
     participant Browser as Playwright Browser
     participant FileSystem as File System
@@ -127,7 +127,7 @@ sequenceDiagram
 
 | Asset Name | Asset Usage | Data Type | Comments |
 |------------|-------------|-----------|----------|
-| AWS Credentials | Used to authenticate with AWS Bedrock | Credentials | Stored in local AWS configuration |
+| AWS Credentials | Used to authenticate with Amazon Bedrock | Credentials | Stored in local AWS configuration |
 | Screenshots | Visual captures of web pages | Media | Stored in local filesystem with random UUIDs |
 | Generated markdown files | Documentation of search results | Content | Stored in local filesystem |
 | Browser session | Temporary browser instance for web automation | Session | Automatically cleaned up after execution |
@@ -148,7 +148,7 @@ sequenceDiagram
 
 | Threat # | Priority | Threat | STRIDE | Affected Assets | Mitigations | Decision | Status/Notes |
 |----------|----------|--------|--------|----------------|-------------|----------|--------------|
-| T-001 | High | A threat actor from the internet (TA1) could intercept API calls to AWS Bedrock, leading to exposure of prompts and responses | Information Disclosure | AWS Credentials, Conversation history | M-001 | Mitigate | Implemented |
+| T-001 | High | A threat actor from the internet (TA1) could intercept API calls to Amazon Bedrock, leading to exposure of prompts and responses | Information Disclosure | AWS Credentials, Conversation history | M-001 | Mitigate | Implemented |
 | T-002 | Medium | A threat actor with local file system access (TA2) could access generated files and screenshots | Information Disclosure | Screenshots, Generated markdown files | M-002 | Accept | Partially implemented |
 | T-003 | High | A threat actor with AWS credential access (TA3) could use the credentials to access AWS services | Elevation of Privilege | AWS Credentials | M-003 | Mitigate | Not explicitly implemented |
 | T-004 | Medium | A threat actor controlling websites (TA4) could execute malicious code in the browser context | Tampering, Information Disclosure | Browser session | M-004 | Mitigate | Implemented |
@@ -159,7 +159,7 @@ sequenceDiagram
 
 | Mitigation Number | Mitigation Description | Threats Mitigating | Status | Related BSC | Comments |
 |-------------------|------------------------|-------------------|--------|------------|----------|
-| M-001 | Use of TLS for all API calls to AWS Bedrock | T-001 | Implemented | | boto3 uses HTTPS by default for all AWS API calls |
+| M-001 | Use of TLS for all API calls to Amazon Bedrock | T-001 | Implemented | | boto3 uses HTTPS by default for all AWS API calls |
 | M-002 | Restrict file system access to the local user only | T-002 | Partially implemented | | Relies on OS file permissions, no explicit permission setting in code |
 | M-003 | Use of temporary credentials with minimal permissions | T-003 | Not explicitly implemented | | Code relies on default AWS credential provider chain |
 | M-004 | Browser runs in headless mode with restricted capabilities | T-004 | Implemented | | Playwright runs in headless mode by default |

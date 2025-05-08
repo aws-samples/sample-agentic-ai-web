@@ -21,7 +21,7 @@ def print_system(s: str):
     print(GREEN + s + RESET)
 
 async def run_example():
-    # Set up AWS Bedrock client
+    # Set up Amazon Bedrock client
     bedrock_client = boto3.client('bedrock-runtime')
     
     messages = [{
@@ -44,6 +44,6 @@ async def run_example():
 
 # Main entry point
 if __name__ == "__main__":
-    print_system("AWS Bedrock Web Tools Minimal Example")
-    print_system("------------------------------------")
+    print_system("Amazon Bedrock Web Tools Minimal Example")
+    print_system("----------------------------------------")
     asyncio.run(run_example())

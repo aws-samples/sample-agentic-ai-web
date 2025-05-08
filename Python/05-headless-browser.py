@@ -103,7 +103,7 @@ async def run_example():
     page = await browser.new_page()
     
     try:
-        # Set up AWS Bedrock client
+        # Set up Amazon Bedrock client
         bedrock_client = boto3.client('bedrock-runtime')
         
         messages = [{
@@ -202,6 +202,6 @@ async def run_example():
 
 # Main entry point
 if __name__ == "__main__":
-    print_system("AWS Bedrock Web Tools Minimal Example")
-    print_system("------------------------------------")
+    print_system("Amazon Bedrock Web Tools Minimal Example")
+    print_system("----------------------------------------")
     asyncio.run(run_example())
