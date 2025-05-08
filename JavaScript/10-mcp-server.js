@@ -12,7 +12,7 @@ const sessionId = randomUUID();
 fs.mkdirSync(`screenshots/${sessionId}/`, { recursive: true });
 fs.mkdirSync(`artefacts/${sessionId}/`, { recursive: true });
 
-function sleep(ms) {
+async function sleep(ms) { 
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -65,13 +65,13 @@ server.tool("type",
             await page.keyboard.type(text);
 
             if (submit) {
-                printSystem(`Pressing Enter to submit`);
+                console.log(`Pressing Enter to submit`);
                 await page.keyboard.press('Enter');
                 return { content: [{ type: "text", text: "submited" }] }
             }
             return { content: [{ type: "text", text: "not submited" }] }
         } catch (error) {
-            printSystem(`Error typing text: ${error}`);
+            console.log(`Error typing text: ${error}`);
             return { content: [{ type: "text", text: error.message }] }
         }
     }
@@ -82,13 +82,11 @@ server.tool("click",
         x: z.number(),
         y: z.number()
     },
-    async ({ x, y }) => {
+    async ({x, y}) => {
         await page.mouse.click(x, y);
-        sleep(1000);
+        await sleep(1000);
 
-        return {
-            clicked_at: { x, y }
-        };
+        return { content: [{ type: "text", text: `clicked at ${x},${y}` }] }
     }
 );
 
@@ -108,7 +106,7 @@ server.tool("scroll",
 
             return { content: [{ type: "text", text: "not scrolled" }] }
         }
-        sleep(1000);
+        await sleep(1000);
 
         return { content: [{ type: "text", text: "scrolled" }] }
     }
@@ -119,12 +117,12 @@ server.tool("writeFile",
         filename: z.string(),
         content: z.string()
     },
-    async ({ url }) => {
+    async ({ filename, content }) => {
         try {
             fs.writeFileSync(`artefacts/${sessionId}/${filename}`, content, 'utf8');
             return { content: [{ type: "text", text: filename }] }
         } catch (error) {
-            printSystem(`Error writing file: ${error}`);
+            console.log(`Error writing file: ${error}`);
             return { content: [{ type: "text", text: error.message }] }
         }
     }
