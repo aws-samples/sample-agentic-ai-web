@@ -1,4 +1,4 @@
-# AWS Bedrock Web Tools - Components Overview
+# Amazon Bedrock Web Tools - Components Overview
 
 This document provides a simplified overview of the key components for each step in the project.
 

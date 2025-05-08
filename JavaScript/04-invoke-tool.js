@@ -63,7 +63,7 @@ function takeScreenshot() {
 }
 
 async function run() {
-    // Set up AWS Bedrock client
+    // Set up Amazon Bedrock client
     const bedrockClient = new BedrockRuntimeClient({ region: "us-west-2" });
 
     try {
@@ -174,6 +174,6 @@ async function run() {
 }
 
 // Main entry point
-printSystem("AWS Bedrock Web Tools Minimal Example")
-printSystem("------------------------------------")
+printSystem("Amazon Bedrock Web Tools Minimal Example")
+printSystem("----------------------------------------")
 run();
